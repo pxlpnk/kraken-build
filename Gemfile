@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
 gem "httparty"
-gem "github_api"
+
 gem "rake"
+gem "github_api"
 gem "awesome_print"
 
 group :test do
-  gemspec
   gem 'rspec'
   gem 'autotest'
 end
