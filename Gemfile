@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem "httparty"
-gem "xml-simple"
 gem "github_api"
 gem "rake"
 gem "awesome_print"

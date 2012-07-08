@@ -1,8 +1,3 @@
-require "HTTParty"
-require "awesome_print"
-require 'xmlsimple'
-
-
 class JenkinsApi
   include HTTParty
 
