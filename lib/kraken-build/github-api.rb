@@ -1,8 +1,5 @@
-require 'httparty'
-require 'awesome_print'
 class GithubApi
   include HTTParty
-
 
   def initialize(config)
     @oauth_token = config[:token]
@@ -16,6 +13,5 @@ class GithubApi
     response = self.class.get("/repos/#{@owner}/#{@repository}/branches?access_token=#{@oauth_token}", options)
     response.map{|branch| branch["name"]}
   end
-
 
 end
