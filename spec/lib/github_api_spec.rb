@@ -13,11 +13,13 @@ describe GithubApi do
 
   it "returns the branches of a Github repository" do
     response = []
-    response << {:name => "foo"}
-    response << {:name => "bar"}
+    response << {"name" => "foo"}
+    response << {"name" => "bar"}
     @api.class.should_receive(:get).with("/repos/#{@options[:owner]}/#{@options[:repository]}/branches?access_token=#{@options[:token]}",{}).and_return(response)
 
-    @api.get_branches
+    branches = @api.get_branches
+    branches.should include "foo"
+    branches.should include "bar"
   end
 
 end
