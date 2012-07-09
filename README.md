@@ -18,7 +18,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+ `kraken-build config.yml`
+
+### Sample config
+<pre>
+-
+  repository : 'rails-project'
+  username : 'kraken'
+  password : '$uperSecret'
+  host : "https://jenkins.host"
+  port : '8080'
+  token : '123456789'
+  owner : 'pxlpnk'
+</pre>
 
 ## Contributing
 
