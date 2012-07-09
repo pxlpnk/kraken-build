@@ -1,5 +1,6 @@
 require "HTTParty"
 require "awesome_print"
+require 'nokogiri'
 
 require "kraken-build/version"
 require "kraken-build/jenkins-api.rb"
@@ -33,12 +34,12 @@ module KrakenBuild
     @branches = get_github_branches
 
     create = compute_jobs_to_create
-      create.map do |job|
-        job_name = "#{@repository}.#{job}"
-        puts "creating => #{job_name}"
-    #     @jenkins.create_job(job_name,"")
-    #     @jenkins.build_job(job_name)
-      end
+    create.map do |job|
+      job_name = "#{@repository}.#{job}"
+      puts "creating => #{job_name}"
+      @jenkins.create_job(job_name)
+      @jenkins.build_job(job_name)
+    end
 
 
     remove = compute_jobs_to_remove

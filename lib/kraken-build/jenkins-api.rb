@@ -24,12 +24,26 @@ class JenkinsApi
     jobs.map{|job| job["name"]}
   end
 
-  def create_job(job_name, job_config, options = {})
+  def create_job(job, options = {})
+    repo = job.split('.').first
+    branch_name = job.split('.').last
+    job_config = create_job_configuration(repo, branch_name)
     options.merge!(
       :body => job_config,
       :format => :xml, :headers => { 'content-type' => 'application/xml' })
 
-    self.class.post("/createItem/api/xml?name=#{CGI.escape(job_name)}", options)
+    self.class.post("/createItem/api/xml?name=#{CGI.escape(job)}", options)
+  end
+
+  def create_job_configuration(repo, branch)
+
+    draft = get_job_configuration("#{repo}.master")
+
+    doc = Nokogiri.XML(draft)
+
+    doc.xpath('//branches//hudson.plugins.git.BranchSpec//name').first.content = "#{repo}.#{branch}"
+
+    doc.to_xml
   end
 
   def get_job_configuration(job, options = {})
