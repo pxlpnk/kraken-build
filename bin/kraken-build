@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require 'yaml'
+require 'kraken-build'
+
+
+ARGV.each do|argument|
+
+  File.open(argument) do |file|
+    config = YAML.load(file)
+
+    config.each do |project|
+
+      project = Hash[project.map{|(k,v)| [k.to_sym,v]}]
+      KrakenBuild.set_config(project)
+      KrakenBuild.run
+
+    end
+  end
+
+end
