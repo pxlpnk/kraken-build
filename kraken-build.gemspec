@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["at@an-ti.eu"]
   gem.description   = %q{A simple tool that generates a job for each github branch in your Jenkins environment}
   gem.summary       = %q{Managing your feature branches on Jenkins and Github}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/pxlpnk/kraken-build"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
