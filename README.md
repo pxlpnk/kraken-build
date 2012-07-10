@@ -1,6 +1,7 @@
 # Kraken::Build
 
-TODO: Write a gem description
+Important:
+This Software contains absolutly no error handling and far by not enough tests!
 
 ## Installation
 
