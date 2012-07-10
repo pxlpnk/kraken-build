@@ -1,6 +1,6 @@
 require "HTTParty"
-require "awesome_print"
 require 'nokogiri'
+require 'cgi'
 
 require "kraken-build/version"
 require "kraken-build/jenkins-api.rb"

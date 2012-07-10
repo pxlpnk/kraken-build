@@ -14,4 +14,12 @@ Gem::Specification.new do |gem|
   gem.name          = "kraken-build"
   gem.require_paths = ["lib"]
   gem.version       = Kraken::Build::VERSION
+
+
+  gem.add_development_dependency "rspec"
+  gem.add_dependency "rake"
+  gem.add_dependency "httparty"
+  gem.add_dependency "nokogiri"
+  # Other attributes omitted
+
 end
