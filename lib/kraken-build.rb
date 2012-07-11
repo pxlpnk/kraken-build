@@ -1,5 +1,5 @@
 require "httparty"
-require 'nokogiri'
+require 'rexml/document'
 require 'cgi'
 
 require "kraken-build/version"
