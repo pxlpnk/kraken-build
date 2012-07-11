@@ -1,9 +1,7 @@
 class JenkinsApi
   include HTTParty
 
-
   def initialize(options = {})
-
     if options[:port]
       self.class.base_uri "#{options[:host]}:#{options[:port]}"
     else
@@ -13,20 +11,17 @@ class JenkinsApi
     if(options[:username] && options[:password])
       self.class.basic_auth options[:username] , options[:password]
     end
-
   end
 
   def get_jobs(options = {})
     response = self.class.get("/api/json/", options)
-
     jobs = response["jobs"]
 
-    jobs.map{|job| job["name"]}
+    jobs.map { |job| job["name"] }
   end
 
   def create_job(job, options = {})
-    repo = job.split('.').first
-    branch_name = job.split('.').last
+    repo, branch_name = job.split('.')
     job_config = create_job_configuration(repo, branch_name)
     options.merge!(
       :body => job_config,
@@ -36,14 +31,11 @@ class JenkinsApi
   end
 
   def create_job_configuration(repo, branch)
-
     draft = get_job_configuration("#{repo}.master")
+    doc = REXML::Document.new(draft)
+    REXML::XPath.first(doc, '//branches//hudson.plugins.git.BranchSpec//name').text = branch
 
-    doc = Nokogiri.XML(draft)
-
-    doc.xpath('//branches//hudson.plugins.git.BranchSpec//name').first.content = "#{repo}.#{branch}"
-
-    doc.to_xml
+    doc.to_s
   end
 
   def get_job_configuration(job, options = {})
