@@ -80,6 +80,14 @@ XML
       @api.get_job_configuration("FooJob").should be(a)
     end
 
+    it "#create_job_configuration returns a valid job configuration" do
+      xml = <<XML
+<xml><branches><hudson.plugins.git.BranchSpec><name>master</name></hudson.plugins.git.BranchSpec></branches></xml>
+XML
+      xml.should_receive(:body).and_return(xml)
+      @api.class.should_receive(:get).with('/job/foobar.master/config.xml', {}).and_return(xml)
+      @api.create_job_configuration('foobar', 'feature').should =~ /feature/
+    end
   end
 
 
