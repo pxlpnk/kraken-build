@@ -6,13 +6,10 @@ require "kraken-build/version"
 require "kraken-build/jenkins-api.rb"
 require "kraken-build/github-api.rb"
 
-
-
 module KrakenBuild
-
   def self.set_config(options = {})
     @config = options
-    @repository = options[:repository]
+    @repository = @config[:repository]
     @github = GithubApi.new(@config)
     @jenkins = JenkinsApi.new(@config)
     @jobs = []
@@ -22,7 +19,7 @@ module KrakenBuild
   end
 
   def self.get_jenkins_branches
-    @jenkins.get_jobs.map{ |job| job =~ /^#{@repository}\.(.*)$/ && $1 }.compact
+    @jenkins.get_jobs.map { |job| job =~ /^#{@repository}\.(.*)$/ && $1 }.compact
   end
 
   def self.get_github_branches
@@ -41,14 +38,12 @@ module KrakenBuild
       @jenkins.build_job(job_name)
     end
 
-
     remove = compute_jobs_to_remove
     remove.map do |job|
       job_name = "#{@repository}.#{job}"
       puts "removing => #{job_name}"
       @jenkins.remove_job(job_name)
     end
-
   end
 
    def self.compute_jobs_to_create
