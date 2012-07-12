@@ -4,15 +4,11 @@ describe JenkinsApi do
 
   context "configurations" do
     before(:each) do
-      api = JenkinsApi.new
+      JenkinsApi.instance_variable_set(:@default_options, {})
     end
 
-     it "uses no basic_auth when username and password are not prived" do
-      pending("flapping")
-      asd = {:user_name => nil, :password =>"nil"}
-      api = asd
-      api = JenkinsApi.new(asd)
-
+    it "uses no basic_auth when username and password are not prived" do
+      api = JenkinsApi.new
       api.class.default_options[:basic_auth].should be(nil)
     end
 
@@ -20,8 +16,8 @@ describe JenkinsApi do
       options = {:username => 'user', :password => 'password'}
       api = JenkinsApi.new(options)
 
-       api.class.default_options[:basic_auth][:username] == options[:username].should
-       api.class.default_options[:basic_auth][:password] == options[:password].should
+      api.class.default_options[:basic_auth][:username].should == options[:username]
+      api.class.default_options[:basic_auth][:password].should == options[:password]
     end
 
     it "uses a port when provided" do
