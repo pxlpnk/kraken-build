@@ -2,8 +2,8 @@
 require File.expand_path('../lib/kraken-build/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["at"]
-  gem.email         = ["at@an-ti.eu"]
+  gem.authors       = ["Andreas Tiefenthaler", "Michael Kohl"]
+  gem.email         = ["at@an-ti.eu", "citizen428@gmail.com"]
   gem.description   = %q{A simple tool that generates a job for each github branch in your Jenkins environment}
   gem.summary       = %q{Managing your feature branches on Jenkins and Github}
   gem.homepage      = "https://github.com/pxlpnk/kraken-build"
