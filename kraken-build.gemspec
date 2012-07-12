@@ -17,9 +17,7 @@ Gem::Specification.new do |gem|
 
 
   gem.add_development_dependency "rspec"
-  gem.add_dependency "rake"
+  gem.add_development_dependency "rake"
   gem.add_dependency "httparty"
-  gem.add_dependency "nokogiri"
   # Other attributes omitted
-
 end
