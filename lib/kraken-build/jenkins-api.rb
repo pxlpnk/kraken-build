@@ -21,7 +21,7 @@ class JenkinsApi
   end
 
   def create_job(job, options = {})
-    repo, branch_name = job.split('.')
+    repo, branch_name = job.split('.', 2)
     job_config = create_job_configuration(repo, branch_name)
     options.merge!(
       :body => job_config,
