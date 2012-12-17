@@ -1,6 +1,8 @@
 class JenkinsApi
   include HTTParty
 
+  attr_accessor :skip_plugins
+
   def initialize(options = {})
     if options[:port]
       self.class.base_uri "#{options[:host]}:#{options[:port]}"
@@ -8,8 +10,13 @@ class JenkinsApi
       self.class.base_uri  options[:host]
     end
 
-    if(options[:username] && options[:password])
+    if (options[:username] && options[:password])
       self.class.basic_auth options[:username] , options[:password]
+    end
+    if (options[:skip_plugins])
+      self.skip_plugins = options[:skip_plugins]
+    else
+      self.skip_plugins = []
     end
   end
 
@@ -34,6 +41,14 @@ class JenkinsApi
     draft = get_job_configuration("#{repo}.master")
     doc = REXML::Document.new(draft)
     REXML::XPath.first(doc, '//branches//hudson.plugins.git.BranchSpec//name').text = branch
+
+    plugin_names = self.skip_plugins.map { |n| "hudson.plugins.#{n}" }
+    publishers = REXML::XPath.first(doc, '//project/publishers')
+    if publishers && publishers.has_elements? && self.skip_plugins && !(self.skip_plugins.empty?)
+      publishers.children.select { |child| child.xpath.match %r[/hudson\.plugins] }.each do |plugin|
+        doc.delete_element(plugin.xpath) if plugin_names.any? { |name| plugin.xpath[name]}
+      end
+    end
 
     doc.to_s
   end

@@ -27,13 +27,17 @@ describe JenkinsApi do
 			api.class.default_options[:base_uri].should == 'http://host:1337'
 		end
 
+    it "sets the plugins to skip at initialization" do
+      options = {:skip_plugins => ['test'] }
+      jenkins_api = JenkinsApi.new(options)
+      jenkins_api.skip_plugins.should eq(['test'])
+    end
+
 	end
 
 
 	context "when interacting with Jenkins" do
-		before(:each) do
-			@api = JenkinsApi.new
-		end
+    let(:api) { JenkinsApi.new }
 
 		it "#get_jobs returns an array of jobs" do
 			j = []
@@ -42,9 +46,9 @@ describe JenkinsApi do
 
 			results = {"jobs" => j}
 
-			@api.class.should_receive(:get).and_return(results)
+			api.class.should_receive(:get).and_return(results)
 
-			jobs = @api.get_jobs
+			jobs = api.get_jobs
 
 			jobs.should include "Foo"
 			jobs.should include "Bar"
@@ -53,15 +57,15 @@ describe JenkinsApi do
 		it "#remove_job returns true if a job was deleted successfully" do
 			job_name = "foo.test_branch"
 
-			@api.class.should_receive(:post).with("/job/#{CGI.escape(job_name)}/doDelete").and_return(true)
+			api.class.should_receive(:post).with("/job/#{CGI.escape(job_name)}/doDelete").and_return(true)
 
-			@api.remove_job(job_name)
+			api.remove_job(job_name)
 		end
 
 		it "#build_job returns true and triggers a build for a job" do
-			@api.class.should_receive(:get).with("/job/FooJob/build").and_return(true)
+			api.class.should_receive(:get).with("/job/FooJob/build").and_return(true)
 
-			@api.build_job("FooJob")
+			api.build_job("FooJob")
 		end
 
 		it "#get_job_configuration returns the xml configuration for a job" do
@@ -71,19 +75,33 @@ describe JenkinsApi do
 			xml = double()
 			xml.should_receive(:body).and_return(a)
 
-			@api.class.should_receive(:get).with("/job/FooJob/config.xml", {}).and_return(xml)
+			api.class.should_receive(:get).with("/job/FooJob/config.xml", {}).and_return(xml)
 
-			@api.get_job_configuration("FooJob").should be(a)
+			api.get_job_configuration("FooJob").should be(a)
 		end
-
-		it "#create_job_configuration returns a valid job configuration" do
-			xml = <<-XML
+    context "#create_job_configuration" do
+      it "returns a valid job configuration" do
+        xml = <<-XML
 <xml><branches><hudson.plugins.git.BranchSpec><name>master</name></hudson.plugins.git.BranchSpec></branches></xml>
-			XML
-			xml.should_receive(:body).and_return(xml)
-			@api.class.should_receive(:get).with('/job/foobar.master/config.xml', {}).and_return(xml)
-			@api.create_job_configuration('foobar', 'feature').should =~ /feature/
-		end
+        XML
+        xml.should_receive(:body).and_return(xml)
+        api.class.should_receive(:get).with('/job/foobar.master/config.xml', {}).and_return(xml)
+        api.create_job_configuration('foobar', 'feature').should =~ /feature/
+      end
+      it "removes all plugins that have been listed in 'skip_plugins'" do
+        api.skip_plugins = ['test']
+        xml_stripped = <<-XML_S
+<xml><project><branches><hudson.plugins.git.BranchSpec><name>master</name></hudson.plugins.git.BranchSpec></branches><publishers></publishers></project></xml>
+        XML_S
+        xml = <<-XML
+<xml><project><branches><hudson.plugins.git.BranchSpec><name>master</name></hudson.plugins.git.BranchSpec></branches><publishers><hudson.plugins.test>test</hudson.plugins.test></publishers></project></xml>
+        XML
+        xml.should_receive(:body).and_return(xml)
+        api.class.should_receive(:get).with('/job/foobar.master/config.xml', {}).and_return(xml)
+        api.create_job_configuration('foobar', 'feature').should_not =~ /hudson\.plugins\.test/
+      end
+    end
+
 
 	end
 
