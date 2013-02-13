@@ -6,6 +6,7 @@ gem "rake"
 
 group :test do
   gem 'rspec'
+  gem 'ZenTest', "4.8.3"
   gem 'autotest'
 end
 
