@@ -35,6 +35,9 @@ Or install it yourself as:
   owner : 'pxlpnk'
 </pre>
 
+## Bugs
+ Please open an issue.
+
 ## Contributing
 
 1. Fork it
